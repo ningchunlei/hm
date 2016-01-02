@@ -1,0 +1,38 @@
+spring:
+  velocity:
+    properties:
+      input:
+        encoding: UTF-8
+      output:
+        encoding: UTF-8
+    cache: false
+  jpa:
+    generate-ddl: true
+    show-sql: true
+
+server:
+  port: 8080
+
+##logging:
+##  file: bms.log
+
+mysql:
+  enable: true
+  url: "jdbc:mysql://127.0.01:3306/hmjf?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true&useAffectedRows=true&allowMultiQueries=true"
+  driverClassName: "com.mysql.jdbc.Driver"
+  username: "root"
+  password: "root"
+  initialSize: 5
+  maxIdle: 10
+  maxActive: 50
+  validationQuery: "select 1"
+
+redis:
+  enable: true
+  host: 127.0.0.1
+  port: 6379
+  password: jack
+  maxIdle: 10
+  maxActive: 50
+  minIdle: 5
+
