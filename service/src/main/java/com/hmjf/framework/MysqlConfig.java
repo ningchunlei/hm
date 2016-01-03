@@ -2,6 +2,8 @@ package com.hmjf.framework;
 
 import com.github.pagehelper.PageHelper;
 import org.apache.tomcat.jdbc.pool.DataSource;
+import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,15 +12,19 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
+import java.io.ByteArrayInputStream;
+import java.io.StringReader;
 import java.util.Properties;
 
 @Configuration
 @EnableConfigurationProperties
 @ConfigurationProperties(prefix="mysql")
 @ConditionalOnExpression("${mysql.enable:false}")
+@MapperScan(basePackages = "com.hmjf", sqlSessionFactoryRef = "sessionFactory", annotationClass = MyBatisRepository.class)
 public class MysqlConfig {
 
 	Logger logger = LoggerFactory.getLogger(MysqlConfig.class);
@@ -80,7 +86,20 @@ public class MysqlConfig {
         jdbcTemplate.setDataSource(dataSource());
         return jdbcTemplate;
     }
-    
+
+	@Bean
+	public SqlSessionFactoryBean sessionFactory() throws Exception {
+		String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><!DOCTYPE configuration\n" +
+				"  PUBLIC \"-//mybatis.org//DTD Config 3.0//EN\"\n" +
+				"  \"http://mybatis.org/dtd/mybatis-3-config.dtd\"><configuration><settings>\n" +
+				"  <setting name=\"mapUnderscoreToCamelCase\" value=\"true\"/></settings></configuration>";
+		SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
+		sessionFactory.setDataSource(dataSource());
+		sessionFactory.setConfigLocation(new InputStreamResource(new ByteArrayInputStream(xml.getBytes())));
+
+		return sessionFactory;
+	}
+
     //@Bean
 //    public DataSourceTransactionManager transactionManager() {
 //    	return new DataSourceTransactionManager(dataSource());

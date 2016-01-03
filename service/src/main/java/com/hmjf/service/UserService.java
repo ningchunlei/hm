@@ -1,14 +1,25 @@
 package com.hmjf.service;
 
 import com.hmjf.dao.UserRepository;
+import com.hmjf.domain.PageList;
 import com.hmjf.entity.User;
+import com.hmjf.mapper.UserMapper;
 import com.hmjf.utils.CopyUtils;
+import com.hmjf.utils.PageUtils;
 import com.hmjf.utils.encrypt.MD5Util;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -17,10 +28,14 @@ import java.util.function.Consumer;
 @Service
 public class UserService {
 
+    static Logger logger = LoggerFactory.getLogger(UserService.class);
+
     private String salt = "234h5ladfhn4##@";
 
     @Resource
     UserRepository userRepository;
+    @Resource
+    UserMapper userMapper;
 
     public boolean registerUser(User user){
         user.password = MD5Util.md5Hex(user.password+"-"+salt);
@@ -32,6 +47,7 @@ public class UserService {
     public User login(User user){
         String password = MD5Util.md5Hex(user.password+"-"+salt);
         User ret = userRepository.findByNameAndPassword(user.name,password);
+
         if(ret!=null){
             userRepository.updateLoginTime(ret.id,new Date());
         }
@@ -50,5 +66,10 @@ public class UserService {
         return ret;
     }
 
+
+    public PageList<User> listUser(){
+        Page<User> page = userRepository.findByRegisterIp("127.0.0.1",new PageRequest(0,1, Sort.Direction.DESC,"id"));
+        return PageUtils.page(page,0,1);
+    }
 
 }

@@ -81,4 +81,10 @@ class UserController {
         return modelAndView;
     }
 
+    @RequestMapping("/u/user/list")
+    @ResponseBody
+    def Result list(){
+        return new Result(code:ResultCode.OK,message: "", body:userService.listUser());
+    }
+
 }
