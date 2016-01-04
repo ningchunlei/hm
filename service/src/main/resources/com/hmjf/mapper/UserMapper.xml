@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hmjf.mapper.UserMapper">
+
+    <resultMap id="userAndAddress" type="com.hmjf.entity.User" autoMapping="true">
+        <association property="address" javaType="com.hmjf.entity.Address" columnPrefix="ad_" autoMapping="true">
+        </association>
+    </resultMap>
+
+</mapper>

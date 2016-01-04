@@ -27,6 +27,9 @@ public class User{
     public Date createTime;
     public Date lastLoginTime;
 
+    @Transient
+    public Address address;
+
     public Long getId() {
         return id;
     }
@@ -89,5 +92,13 @@ public class User{
 
     public void setLastLoginTime(Date lastLoginTime) {
         this.lastLoginTime = lastLoginTime;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 }

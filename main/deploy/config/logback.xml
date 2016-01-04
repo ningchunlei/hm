@@ -18,6 +18,11 @@
         </encoder>
     </appender>
 
+    <logger name="com.hmjf.mapper" level="DEBUG">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE"/>

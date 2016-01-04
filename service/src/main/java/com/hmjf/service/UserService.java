@@ -45,6 +45,7 @@ public class UserService {
 
     @Transactional(rollbackFor = Exception.class)
     public User login(User user){
+        List<User> list = userMapper.getUsers();
         String password = MD5Util.md5Hex(user.password+"-"+salt);
         User ret = userRepository.findByNameAndPassword(user.name,password);
 
